@@ -1,5 +1,6 @@
 # 📍 GeoHistory - Traceur d'accès Géolocalisation
 
+[![Build & Package](https://github.com/kbaniszack/geo-history-tracker/actions/workflows/package.yml/badge.svg)](https://github.com/kbaniszack/geo-history-tracker/actions/workflows/package.yml)
 [![English Version](https://img.shields.io/badge/Language-English-blue.svg)](README.md)
 [![Manifest V3](https://img.shields.io/badge/Manifest-V3-brightgreen.svg)](manifest.json)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
