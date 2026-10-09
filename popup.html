@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GeoHistory</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header class="header">
+    <div class="logo-group">
+      <div class="logo-icon">📍</div>
+      <div>
+        <h1>GeoHistory</h1>
+        <p class="subtitle">Journal d'accès à votre localisation</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button id="open-edge-settings" class="btn-icon" title="Ouvrir les autorisations Edge">⚙️</button>
+    </div>
+  </header>
+
+  <section class="stats-row">
+    <div class="stat-card">
+      <span class="stat-value" id="stat-total">0</span>
+      <span class="stat-label">Requêtes</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-value" id="stat-sites">0</span>
+      <span class="stat-label">Sites uniques</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-value" id="stat-last">--</span>
+      <span class="stat-label">Dernier accès</span>
+    </div>
+  </section>
+
+  <div class="filter-bar">
+    <input type="text" id="search-input" placeholder="Filtrer par site, domaine ou URL..." autocomplete="off">
+    <select id="method-filter">
+      <option value="all">Toutes méthodes</option>
+      <option value="getCurrentPosition">getCurrentPosition</option>
+      <option value="watchPosition">watchPosition</option>
+    </select>
+  </div>
+
+  <main class="logs-container" id="logs-container">
+    <div class="empty-state" id="empty-state">
+      <div class="empty-icon">🛡️</div>
+      <p>Aucun accès à la localisation détecté pour l'instant.</p>
+      <span>Les requêtes des sites web s'afficheront ici en temps réel avec la date et l'heure exacte.</span>
+    </div>
+    <ul class="logs-list" id="logs-list"></ul>
+  </main>
+
+  <footer class="footer">
+    <button id="btn-clear" class="btn btn-secondary">Vider l'historique</button>
+    <div class="export-group">
+      <button id="btn-export-csv" class="btn btn-primary">Export CSV</button>
+      <button id="btn-export-json" class="btn btn-outline">JSON</button>
+    </div>
+  </footer>
+
+  <script src="popup.js"></script>
+</body>
+</html>

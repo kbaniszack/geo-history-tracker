@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0284c7" />
+      <stop offset="100%" stop-color="#0369a1" />
+    </linearGradient>
+  </defs>
+  <!-- Fond circulaire -->
+  <circle cx="64" cy="64" r="60" fill="url(#bgGrad)" />
+  
+  <!-- Anneau radar -->
+  <circle cx="64" cy="64" r="38" fill="none" stroke="#ffffff" stroke-width="6" opacity="0.9" />
+  
+  <!-- Réticule viseur (Nord, Sud, Est, Ouest) -->
+  <line x1="64" y1="12" x2="64" y2="30" stroke="#ffffff" stroke-width="6" stroke-linecap="round" />
+  <line x1="64" y1="98" x2="64" y2="116" stroke="#ffffff" stroke-width="6" stroke-linecap="round" />
+  <line x1="12" y1="64" x2="30" y2="64" stroke="#ffffff" stroke-width="6" stroke-linecap="round" />
+  <line x1="98" y1="64" x2="116" y2="64" stroke="#ffffff" stroke-width="6" stroke-linecap="round" />
+  
+  <!-- Point central GPS -->
+  <circle cx="64" cy="64" r="14" fill="#ffffff" />
+</svg>
