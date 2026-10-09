@@ -7,6 +7,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 
 async function handleGeoLog(data, sender) {
+  console.log('[GeoHistory-Background] Requête reçue :', data.origin, data.method, data);
   const item = {
     id: `${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
     timestamp: data.timestamp || Date.now(),

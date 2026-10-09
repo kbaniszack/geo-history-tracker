@@ -2,8 +2,14 @@
   if (window.__GEO_TRACKER_HOOKED__) return;
   window.__GEO_TRACKER_HOOKED__ = true;
 
-  function notifyTracker(method, details) {
+  function notifyTracker(method, options) {
     try {
+      const details = {
+        enableHighAccuracy: !!(options && options.enableHighAccuracy),
+        timeout: options && typeof options.timeout === 'number' ? options.timeout : null,
+        maximumAge: options && typeof options.maximumAge === 'number' ? options.maximumAge : null
+      };
+
       window.postMessage({
         source: '__GEO_TRACKER__',
         method: method,
@@ -11,76 +17,59 @@
         href: window.location.href,
         title: document.title || '',
         timestamp: Date.now(),
-        details: details || {}
+        details: details
       }, '*');
+
+      console.log(`[GeoHistory] 📍 Requête de géolocalisation détectée (${method}) pour :`, window.location.origin);
     } catch (e) {
-      // Ignorer silencieusement si la fenêtre est déconnectée
+      // Ignorer silencieusement si contexte restreint
     }
   }
 
-  function hookGeolocation(geo) {
-    if (!geo || geo.__GEO_INTERCEPTED__) return;
-    geo.__GEO_INTERCEPTED__ = true;
+  // 1. Interception sur Geolocation.prototype (Interception universelle Chromium/Edge/Firefox)
+  if (typeof window.Geolocation !== 'undefined' && window.Geolocation.prototype) {
+    const proto = window.Geolocation.prototype;
 
-    const originalGetCurrentPosition = geo.getCurrentPosition ? geo.getCurrentPosition.bind(geo) : null;
-    const originalWatchPosition = geo.watchPosition ? geo.watchPosition.bind(geo) : null;
-
-    if (originalGetCurrentPosition) {
-      geo.getCurrentPosition = function(successCallback, errorCallback, options) {
-        notifyTracker('getCurrentPosition', {
-          enableHighAccuracy: options && options.enableHighAccuracy,
-          timeout: options && options.timeout,
-          maximumAge: options && options.maximumAge
-        });
-        return originalGetCurrentPosition(successCallback, errorCallback, options);
+    const originalGet = proto.getCurrentPosition;
+    if (typeof originalGet === 'function') {
+      proto.getCurrentPosition = function(successCallback, errorCallback, options) {
+        notifyTracker('getCurrentPosition', options);
+        return originalGet.apply(this, arguments);
       };
     }
 
-    if (originalWatchPosition) {
-      geo.watchPosition = function(successCallback, errorCallback, options) {
-        notifyTracker('watchPosition', {
-          enableHighAccuracy: options && options.enableHighAccuracy,
-          timeout: options && options.timeout,
-          maximumAge: options && options.maximumAge
-        });
-        return originalWatchPosition(successCallback, errorCallback, options);
+    const originalWatch = proto.watchPosition;
+    if (typeof originalWatch === 'function') {
+      proto.watchPosition = function(successCallback, errorCallback, options) {
+        notifyTracker('watchPosition', options);
+        return originalWatch.apply(this, arguments);
       };
     }
   }
 
-  // Hook immédiat si navigator.geolocation existe déjà
-  if (navigator && navigator.geolocation) {
-    hookGeolocation(navigator.geolocation);
-  }
-
-  // Hook sur le prototype si disponible
-  if (window.Geolocation && window.Geolocation.prototype) {
-    hookGeolocation(window.Geolocation.prototype);
-  }
-
-  // Observer pour hooker si l'objet est initialisé plus tard
+  // 2. Interception de secours directe si une instance navigator.geolocation surcharge ses propres méthodes
   try {
-    let currentGeo = navigator ? navigator.geolocation : null;
-    if (navigator) {
-      Object.defineProperty(navigator, 'geolocation', {
-        configurable: true,
-        enumerable: true,
-        get: function() {
-          return currentGeo;
-        },
-        set: function(val) {
-          currentGeo = val;
-          hookGeolocation(val);
-        }
-      });
-      if (currentGeo) {
-        hookGeolocation(currentGeo);
+    if (navigator && navigator.geolocation) {
+      const instance = navigator.geolocation;
+      if (Object.prototype.hasOwnProperty.call(instance, 'getCurrentPosition')) {
+        const instGet = instance.getCurrentPosition;
+        instance.getCurrentPosition = function(success, error, options) {
+          notifyTracker('getCurrentPosition', options);
+          return instGet.apply(this, arguments);
+        };
+      }
+      if (Object.prototype.hasOwnProperty.call(instance, 'watchPosition')) {
+        const instWatch = instance.watchPosition;
+        instance.watchPosition = function(success, error, options) {
+          notifyTracker('watchPosition', options);
+          return instWatch.apply(this, arguments);
+        };
       }
     }
-  } catch (err) {
-    // Si navigator.geolocation est non-configurable dans cette version du navigateur, le hook direct suffit
-    if (navigator && navigator.geolocation) {
-      hookGeolocation(navigator.geolocation);
-    }
+  } catch (e) {
+    // Protégé
   }
+
+  console.log('[GeoHistory] 🛡️ Intercepteur actif sur :', window.location.origin);
 })();
+

@@ -14,8 +14,9 @@
           timestamp: event.data.timestamp || Date.now(),
           details: event.data.details || {}
         }
-      }).catch(function() {
-        // Ignoré si le service worker est inactif temporairement
+      }).catch(function(err) {
+        // En cas de réveil du service worker
+        console.debug('[GeoHistory-Content] Transmission en cours:', err);
       });
     } catch (e) {
       // Ignorer
