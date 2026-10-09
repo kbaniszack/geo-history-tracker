@@ -1,45 +1,60 @@
-# 📍 GeoHistory - Traceur d'accès Géolocalisation
+# 📍 GeoHistory - Geolocation Access Tracker
 
-Extension de navigateur (Manifest V3) pour Microsoft Edge et Google Chrome permettant de journaliser en temps réel chaque requête d'accès à votre position géographique (`navigator.geolocation`).
+[![Version Française](https://img.shields.io/badge/Langue-Français-blue.svg)](README.fr.md)
+[![Manifest V3](https://img.shields.io/badge/Manifest-V3-brightgreen.svg)](manifest.json)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-## ✨ Fonctionnalités
-
-* **Interception transparente & native :** Détecte les appels `getCurrentPosition` et `watchPosition` sans casser le fonctionnement des sites web.
-* **Historique horodaté précis :** Enregistre la date, l'heure exacte à la seconde près, le nom de domaine, l'URL complète et le titre de la page.
-* **Badge d'activité :** Affiche le nombre de requêtes directement sur l'icône de l'extension.
-* **Filtres & Recherche :** Filtrez instantanément par nom de site, URL ou méthode d'accès.
-* **Export de données :** Exportez votre journal d'audit en **CSV** (compatible Excel) ou **JSON**.
-* **Accès rapide aux réglages Edge :** Bouton direct vers `edge://settings/content/location` pour révoquer les autorisations des sites abusifs.
+A lightweight, privacy-focused browser extension (Manifest V3) for Microsoft Edge and Google Chrome that monitors, logs, and audits website geolocation requests (`navigator.geolocation`) in real time.
 
 ---
 
-## 🚀 Installation dans Microsoft Edge (en 30 secondes)
+## ✨ Features
 
-1. Ouvrez Microsoft Edge et tapez dans la barre d'adresse :
+* **Transparent & Native Interception:** Detects `getCurrentPosition` and `watchPosition` calls seamlessly without interfering with webpage behavior.
+* **Accurate Timestamps & Audit Log:** Records the exact date, time (to the second), hostname, full URL, and page title for every location request.
+* **Live Counter Badge:** Displays the total count of captured geolocation events directly on the browser extension icon.
+* **Instant Search & Filter:** Filter logs by domain name, query strings, or API method (`getCurrentPosition` vs `watchPosition`).
+* **Data Export:** Export your complete privacy audit trail to **CSV** (Excel/Sheets compatible) or **JSON**.
+* **Quick Access to Browser Settings:** One-click shortcut to manage and revoke website location permissions (`edge://settings/content/location`).
+* **100% Local & Privacy-First:** No telemetry, no third-party tracking, zero external network requests. All data stays strictly stored in your local browser storage (`chrome.storage.local`).
+
+---
+
+## 🚀 Installation Guide (Microsoft Edge & Chrome)
+
+1. Open Microsoft Edge and navigate to:
    ```text
    edge://extensions
    ```
-2. Dans le menu de gauche, activez l'interrupteur **Mode développeur** (*Developer mode*).
-3. Cliquez sur le bouton **Charger les composants décompressés** (*Load unpacked*).
-4. Sélectionnez le dossier :
+   *(Or `chrome://extensions` in Google Chrome)*.
+2. In the left panel (or top right), toggle on **Developer mode**.
+3. Click on the **Load unpacked** button.
+4. Select the project directory:
    ```text
    D:\Edge-extensions\geo-history-tracker
    ```
-5. L'icône **GeoHistory (📍)** apparaît immédiatement dans votre barre d'extensions ! *(Pensez à cliquer sur l'icône de puzzle pour l'épingler visible à côté de votre barre d'adresse).*
+5. **GeoHistory** is installed! Click the puzzle icon in your toolbar to pin it next to the address bar.
 
 ---
 
-## 🧪 Comment tester immédiatement ?
+## 🧪 How to Test
 
-1. Ouvrez un site météo ou cartographique (ex: `https://www.windy.com` ou `https://browserleaks.com/geo`).
-2. Autorisez la géolocalisation si le site la demande.
-3. Cliquez sur l'icône **GeoHistory** dans votre barre Edge : la requête apparaît instantanément avec l'heure exacte et l'URL !
+1. Visit any website that requests your location (e.g., weather or mapping services like [Windy](https://www.windy.com) or [BrowserLeaks Geolocation](https://browserleaks.com/geo)).
+2. Allow the location prompt when asked by the browser.
+3. Open the **GeoHistory** popup: the access event appears instantly with domain details and exact time.
 
 ---
 
-## 📦 Prêt pour publication (Microsoft Edge Add-ons & Chrome Web Store)
+## 🛠️ Architecture & Under the Hood
 
-L'extension respecte à 100 % les standards **Manifest V3** de Microsoft et Google :
-* Aucune dépendance externe, code 100 % local et respectueux de la vie privée.
-* Aucune donnée n'est transmise sur internet : tout est stocké dans le stockage local de votre navigateur (`chrome.storage.local`).
-* Pour générer les PNG requis par le Store si nécessaire, double-cliquez simplement sur `generer_icones.bat`.
+* **Manifest V3 Architecture:** Fully compliant with modern Chromium extension security standards.
+* **`injected.js` (Main World Execution):** Non-intrusive monkey-patching of `Geolocation.prototype` preserving native browser invocation bindings via `apply(this, arguments)`.
+* **`content.js` (Isolated World):** Secure event bridge communicating isolated DOM events to extension runtime APIs.
+* **`background.js` (Service Worker):** Handles log persistence, storage management (`MAX_LOGS` queue), and toolbar badge updates.
+* **`popup/` (User Interface):** Clean, modern dark-themed dashboard built with vanilla web technologies (HTML5, CSS3, JavaScript).
+
+---
+
+## 📄 License
+
+Distributed under the MIT License. See `LICENSE` for more information.
