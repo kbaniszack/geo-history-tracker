@@ -67,7 +67,7 @@ def draw_geo_icon(x, y, w, h):
 def generate_icons():
     print("🎨 Génération des icônes PNG officielles...")
     os.makedirs(ICONS_DIR, exist_ok=True)
-    sizes = [16, 32, 48, 128]
+    sizes = [16, 32, 48, 128, 300]
     for size in sizes:
         png_bytes = create_png(size, size, draw_geo_icon)
         out_path = os.path.join(ICONS_DIR, f"icon{size}.png")
